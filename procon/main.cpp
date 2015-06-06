@@ -18,7 +18,53 @@ using namespace std;
 #define to_bit(i) static_cast< bitset<8> >(i)
 #define INF (1<<28)
 #define EPS 1e-9
-#define int(n) int n; cin >> n;
+
+int main(int argc, const char * argv[]){
+    //    cout << (int)'+' << endl;
+    //    cout << (int)'-' << endl;
+    //    cout << (int)'0' << endl;
+    string str;
+    cin >> str;
+    
+    FOR(i, 1, str.length()){
+        if(str[i-1] >= '0'){
+            if(str[i] == '-'){
+                str[i] = '+';
+            }else if(str[i] == '+'){
+                str[i] = '-';
+            }
+        }
+    }
+    //    cout << str << endl;
+    
+    int ans = 0;
+    int num = 0;
+    int op = 1;
+    REP(i,str.length()){
+        switch (str[i]) {
+            case '+':
+                ans += op * num;
+                if(num != 0) op = 1;
+                num = 0;
+                break;
+                
+            case '-':
+                ans += op * num;
+                if(num != 0) op = 1;
+                num = 0;
+                op *= -1;
+                break;
+                
+            default:
+                num *= 10;
+                num += (int)(str[i] - '0');
+                break;
+        }
+    }
+    ans += op * num;
+    cout << ans << endl;
+}
+
 
 
 typedef long long ll;
@@ -227,28 +273,3 @@ void dfs2d(int i, int j, int r, int c){
     }
 };
 
-
-/**
- * start
- * @author yoshikyoto
- */
-
-int main(int argc, const char * argv[]){
-    int n, a[100], b[100];
-    cin >> n;
-    REP(i,n) cin >> a[i];
-    REP(i,n) cin >> b[i];
-    
-    int score[101];
-    REP(i,101) score[i] = 0;
-    
-    REP(i,n) score[b[i]] += a[i];
-        
-    for(int i = 1; i < 101; i++){
-        if(score[0] < score[i]){
-            cout << "NO" << endl;
-            return 0;
-        }
-    }
-    cout << "YES" << endl;
-}
