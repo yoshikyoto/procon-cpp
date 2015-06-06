@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iomanip>
 #include <map>
+#include <complex>
 using namespace std;
 
 #define REP(i, n) for(int i = 0; i < n; i++)
@@ -19,51 +20,7 @@ using namespace std;
 #define INF (1<<28)
 #define EPS 1e-9
 
-int main(int argc, const char * argv[]){
-    //    cout << (int)'+' << endl;
-    //    cout << (int)'-' << endl;
-    //    cout << (int)'0' << endl;
-    string str;
-    cin >> str;
-    
-    FOR(i, 1, str.length()){
-        if(str[i-1] >= '0'){
-            if(str[i] == '-'){
-                str[i] = '+';
-            }else if(str[i] == '+'){
-                str[i] = '-';
-            }
-        }
-    }
-    //    cout << str << endl;
-    
-    int ans = 0;
-    int num = 0;
-    int op = 1;
-    REP(i,str.length()){
-        switch (str[i]) {
-            case '+':
-                ans += op * num;
-                if(num != 0) op = 1;
-                num = 0;
-                break;
-                
-            case '-':
-                ans += op * num;
-                if(num != 0) op = 1;
-                num = 0;
-                op *= -1;
-                break;
-                
-            default:
-                num *= 10;
-                num += (int)(str[i] - '0');
-                break;
-        }
-    }
-    ans += op * num;
-    cout << ans << endl;
-}
+
 
 
 
@@ -273,3 +230,77 @@ void dfs2d(int i, int j, int r, int c){
     }
 };
 
+
+// 高速逆フーリエ変換
+const double PI = 4.0*atan(1.0);
+const complex<double> I(0,1);
+
+void dft(int n, complex<double> a[], int inverse) {
+    double theta = 2 * inverse * PI / n;
+    for (int m = n; m >= 2; m >>= 1) {
+        int mh = m >> 1;
+        for (int i = 0; i < mh; i++) {
+            complex<double> w = exp(i*theta*I);
+            for (int j = i; j < n; j += m) {
+                int k = j + mh;
+                complex<double> x = a[j] - a[k];
+                a[j] += a[k];
+                a[k] = w * x;
+            }
+        }
+        theta *= 2;
+    }
+    int i = 0;
+    for (int j = 1; j < n - 1; j++) {
+        for (int k = n >> 1; k > (i ^= k); k >>= 1);
+        if (j < i) swap(a[i], a[j]);
+    }
+    
+    if(inverse == -1){
+        complex<double> d(n,0);
+        REP(i,n){
+            a[i] = a[i] / d;
+        }
+    }
+}
+
+
+int main(int argc, const char * argv[]){
+    /*
+    int n;
+    cin >> n;
+    int g[100002], h[100002];
+    REP(i,n){
+        cin >> g[i] >> h[i];
+    }
+    
+    int nn = 2;
+    while(nn < n + n + 1){
+        nn = nn * nn;
+    }
+    
+    complex<double> *gg = new complex<double>[nn];
+    complex<double> *hh = new complex<double>[nn];
+    REP(i,nn){
+        if(i < n){
+            gg[i] = g[i];
+            hh[i] = h[i];
+        }else{
+            gg[i] = 0;
+            hh[i] = 0;
+        }
+    }
+    dft(nn, gg, 1);
+    dft(nn, hh, 1);
+    
+    complex<double> *ff = new complex<double>[nn];
+    REP(i,nn){
+        ff[i] = gg[i] * hh[i];
+    }
+    dft(nn, ff, -1);
+    cout << 0 << endl;
+    REP(i, 2*n-1){
+        cout << ff[i].real() << endl;
+    }
+     */
+}
