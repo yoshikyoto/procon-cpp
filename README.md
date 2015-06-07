@@ -5,7 +5,8 @@
 
 ### 高速フーリエ変換
 
-* 参考: [http://atc001.contest.atcoder.jp/tasks/fft_c]
+* 参考1: [http://atc001.contest.atcoder.jp/tasks/fft_c]
+* 参考2: [http://www.prefield.com/algorithm/math/fft.html]
 
 ```cpp
 // 高速フーリエ変換
