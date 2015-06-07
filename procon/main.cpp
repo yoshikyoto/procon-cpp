@@ -235,8 +235,9 @@ void dfs2d(int i, int j, int r, int c){
 const double PI = 4.0*atan(1.0);
 const complex<double> I(0,1);
 
-void dft(int n, complex<double> a[], int inverse) {
+void fft(complex<double> a[], int n, int inverse) {
     double theta = 2 * inverse * PI / n;
+    
     for (int m = n; m >= 2; m >>= 1) {
         int mh = m >> 1;
         for (int i = 0; i < mh; i++) {
@@ -264,19 +265,58 @@ void dft(int n, complex<double> a[], int inverse) {
     }
 }
 
+/*
+void dft(complex<double> f[], int n){
+    if(n == 1) return;
+    // cout << "dft " << n << endl;
+    complex<double> *g = new complex<double>[n/2];
+    complex<double> *h = new complex<double>[n/2];
+    for(int i = 0; i < n/2; i++){
+        g[i] = f[2*i];
+        h[i] = f[2*i + 1];
+    }
+    dft(g, n/2);
+    dft(h, n/2);
+    complex<double> zeta(cos(2*PI/n), sin(2*PI/n));
+    cout << zeta << endl;
+    complex<double> pow_zeta = 1;
+    for(int i = 0; i < n; i++){
+        f[i] = g[i%(n/2)] + pow_zeta * h[i%(n/2)];
+        pow_zeta *= zeta;
+    }
+}
+
+void inverse_dft(complex<double> f[], int n){
+    if(n == 1) return;
+    complex<double> *g = new complex<double>[n/2];
+    complex<double> *h = new complex<double>[n/2];
+    for(int i = 0; i < n/2; i++){
+        g[i] = f[2*i];
+        h[i] = f[2*i + 1];
+    }
+    dft(g, n/2);
+    dft(h, n/2);
+    complex<double> zeta(cos(2*PI/n), sin(2*PI/n));
+    complex<double> pow_zeta = 1;
+    for(int i = 0; i < n; i++){
+        f[i] = g[i%(n/2)] + pow_zeta * h[i%(n/2)];
+        f[i] /= n;
+        pow_zeta /= zeta;
+    }
+}*/
+
 
 int main(int argc, const char * argv[]){
-    /*
     int n;
     cin >> n;
-    int g[100002], h[100002];
+    int g[100000], h[100000];
     REP(i,n){
         cin >> g[i] >> h[i];
     }
     
-    int nn = 2;
-    while(nn < n + n + 1){
-        nn = nn * nn;
+    int nn = 1;
+    while(nn <= n + n - 1){
+        nn *= 2;
     }
     
     complex<double> *gg = new complex<double>[nn];
@@ -290,17 +330,20 @@ int main(int argc, const char * argv[]){
             hh[i] = 0;
         }
     }
-    dft(nn, gg, 1);
-    dft(nn, hh, 1);
+    fft(gg, nn, 1);
+    fft(hh, nn, 1);
+    
+//    REP(i, n){
+//        cout << gg[i] << " " << hh[i] << endl;
+//    }
     
     complex<double> *ff = new complex<double>[nn];
     REP(i,nn){
         ff[i] = gg[i] * hh[i];
     }
-    dft(nn, ff, -1);
+    fft(ff, nn, -1);
     cout << 0 << endl;
     REP(i, 2*n-1){
-        cout << ff[i].real() << endl;
+        cout << int(ff[i].real() + EPS) << endl;
     }
-     */
 }
