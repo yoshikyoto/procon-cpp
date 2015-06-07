@@ -231,10 +231,10 @@ void dfs2d(int i, int j, int r, int c){
 };
 
 
-// 高速逆フーリエ変換
+// 高速フーリエ変換
+// inverse = 1 でフーリエ変換、inverse = -1 で逆フーリエ変換
 const double PI = 4.0*atan(1.0);
 const complex<double> I(0,1);
-
 void fft(complex<double> a[], int n, int inverse) {
     double theta = 2 * inverse * PI / n;
     
@@ -265,46 +265,6 @@ void fft(complex<double> a[], int n, int inverse) {
     }
 }
 
-/*
-void dft(complex<double> f[], int n){
-    if(n == 1) return;
-    // cout << "dft " << n << endl;
-    complex<double> *g = new complex<double>[n/2];
-    complex<double> *h = new complex<double>[n/2];
-    for(int i = 0; i < n/2; i++){
-        g[i] = f[2*i];
-        h[i] = f[2*i + 1];
-    }
-    dft(g, n/2);
-    dft(h, n/2);
-    complex<double> zeta(cos(2*PI/n), sin(2*PI/n));
-    cout << zeta << endl;
-    complex<double> pow_zeta = 1;
-    for(int i = 0; i < n; i++){
-        f[i] = g[i%(n/2)] + pow_zeta * h[i%(n/2)];
-        pow_zeta *= zeta;
-    }
-}
-
-void inverse_dft(complex<double> f[], int n){
-    if(n == 1) return;
-    complex<double> *g = new complex<double>[n/2];
-    complex<double> *h = new complex<double>[n/2];
-    for(int i = 0; i < n/2; i++){
-        g[i] = f[2*i];
-        h[i] = f[2*i + 1];
-    }
-    dft(g, n/2);
-    dft(h, n/2);
-    complex<double> zeta(cos(2*PI/n), sin(2*PI/n));
-    complex<double> pow_zeta = 1;
-    for(int i = 0; i < n; i++){
-        f[i] = g[i%(n/2)] + pow_zeta * h[i%(n/2)];
-        f[i] /= n;
-        pow_zeta /= zeta;
-    }
-}*/
-
 
 int main(int argc, const char * argv[]){
     int n;
@@ -333,10 +293,6 @@ int main(int argc, const char * argv[]){
     fft(gg, nn, 1);
     fft(hh, nn, 1);
     
-//    REP(i, n){
-//        cout << gg[i] << " " << hh[i] << endl;
-//    }
-    
     complex<double> *ff = new complex<double>[nn];
     REP(i,nn){
         ff[i] = gg[i] * hh[i];
@@ -344,6 +300,6 @@ int main(int argc, const char * argv[]){
     fft(ff, nn, -1);
     cout << 0 << endl;
     REP(i, 2*n-1){
-        cout << int(ff[i].real() + EPS) << endl;
+        cout << (ff[i].real()) << endl;
     }
 }
