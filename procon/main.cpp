@@ -267,39 +267,40 @@ void fft(complex<double> a[], int n, int inverse) {
 
 
 int main(int argc, const char * argv[]){
-    int n;
-    cin >> n;
-    int g[100000], h[100000];
-    REP(i,n){
-        cin >> g[i] >> h[i];
-    }
-    
-    int nn = 1;
-    while(nn <= n + n - 1){
-        nn *= 2;
-    }
-    
-    complex<double> *gg = new complex<double>[nn];
-    complex<double> *hh = new complex<double>[nn];
-    REP(i,nn){
-        if(i < n){
-            gg[i] = g[i];
-            hh[i] = h[i];
-        }else{
-            gg[i] = 0;
-            hh[i] = 0;
+    int n, m;
+    cin >> n >> m;
+    string s, t;
+    cin >> s >> t;
+    int editCount[1001][1001];
+    int inf = 1<<28;
+    REP(i, n+1) {
+        REP(j, m+1) {
+            editCount[i][j] = inf;
         }
     }
-    fft(gg, nn, 1);
-    fft(hh, nn, 1);
+    editCount[0][0] = 0;
     
-    complex<double> *ff = new complex<double>[nn];
-    REP(i,nn){
-        ff[i] = gg[i] * hh[i];
+    REP(i, n+1) {
+        REP(j, m+1) {
+            // 文字を追加する
+            if(i <= n) {
+                editCount[i][j+1] = min(editCount[i][j+1], editCount[i][j] + 1);
+            }
+            
+            // 文字を削除する
+            if(j <= m) {
+                editCount[i+1][j] = min(editCount[i+1][j], editCount[i][j] + 1);
+            }
+            
+            // 文字を変更する
+            if(s[i] == t[j]) {
+                editCount[i+1][j+1] = min(editCount[i+1][j+1], editCount[i][j]);
+            } else {
+                editCount[i+1][j+1] = min(editCount[i+1][j+1], editCount[i][j] + 1);
+                
+            }
+        }
     }
-    fft(ff, nn, -1);
-    cout << 0 << endl;
-    REP(i, 2*n-1){
-        cout << (ff[i].real()) << endl;
-    }
+    
+    cout << editCount[n][m];
 }
